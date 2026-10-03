@@ -1,26 +1,9 @@
 /**
  * About — the car rental story, values, milestones and stats.
  */
-import { createFileRoute, Link } from "@tanstack/react-router";
+import { Link } from "@/lib/Link";
 import { site, stats } from "@/config/settings";
 import heroImg from "/images/cars/hero-fleet.jpg";
-
-export const Route = createFileRoute("/about")({
-  head: () => ({
-    meta: [
-      { title: "About — Noble Nexus Car Rentals" },
-      {
-        name: "description",
-        content:
-          "Noble Nexus Car Rentals has put discerning drivers behind the wheel since 1984 — economy to luxury, self-drive or chauffeured.",
-      },
-      { property: "og:title", content: "About — Noble Nexus Car Rentals" },
-      { property: "og:description", content: "Premium car rentals, quietly perfected since 1984." },
-      { property: "og:image", content: heroImg },
-    ],
-  }),
-  component: AboutPage,
-});
 
 const TIMELINE = [
   {
@@ -45,7 +28,7 @@ const TIMELINE = [
   },
 ];
 
-function AboutPage() {
+export function AboutPage() {
   return (
     <>
       <section className="container-page py-24 md:py-32 grid md:grid-cols-2 gap-16 items-center">
@@ -147,7 +130,6 @@ function AboutPage() {
         </h2>
         <Link
           to="/book"
-          search={{ car: undefined }}
           className="inline-block bg-navy text-cream px-10 py-4 eyebrow hover:bg-gold hover:text-navy transition-colors"
         >
           Reserve a Vehicle

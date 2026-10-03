@@ -2,7 +2,7 @@
  * SiteFooter — global footer with divisions, corporate links, copyright.
  * Edit company copy via src/config/settings.ts.
  */
-import { Link } from "@tanstack/react-router";
+import { Link } from "@/lib/Link";
 import { contact, credit, site } from "@/config/settings";
 
 export function SiteFooter() {
@@ -37,8 +37,8 @@ export function SiteFooter() {
             <li>
               <Link
                 to="/book"
-                search={{ car: undefined }}
                 className="hover:text-gold transition-colors"
+                aria-label="Reserve a vehicle"
               >
                 Reserve a Vehicle
               </Link>

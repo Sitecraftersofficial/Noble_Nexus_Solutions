@@ -2,8 +2,8 @@
  * Car Rental — fleet browsing with filters, per-car detail, policies,
  * FAQ, and booking form. All vehicle data comes from src/data/cars.json.
  */
-import { createFileRoute, Link } from "@tanstack/react-router";
 import { useMemo, useState } from "react";
+import { Link } from "@/lib/Link";
 import {
   Check,
   ShieldCheck,
@@ -22,29 +22,9 @@ import { policies } from "@/config/settings";
 import { cars, categories, locations, formatPrice, type Car, type CarCategory } from "@/data/cars";
 import { Tilt } from "@/lib/nx-motion";
 
-export const Route = createFileRoute("/car-rental")({
-  head: () => ({
-    meta: [
-      { title: "Fleet & Reservations — Noble Nexus" },
-      {
-        name: "description",
-        content:
-          "Browse our full fleet and reserve online — daily, weekly and monthly rates with optional chauffeur and full insurance.",
-      },
-      { property: "og:title", content: "Fleet & Reservations — Noble Nexus" },
-      {
-        property: "og:description",
-        content: "Premium car rentals with daily, weekly and monthly pricing.",
-      },
-      { property: "og:image", content: heroImg },
-    ],
-  }),
-  component: CarRentalPage,
-});
-
 const CATEGORIES: Array<CarCategory | "All"> = ["All", ...categories];
 
-function CarRentalPage() {
+export function FleetPage() {
   const [category, setCategory] = useState<CarCategory | "All">("All");
   const [location, setLocation] = useState<string>("Any");
   const [maxPrice, setMaxPrice] = useState<number>(600000);
@@ -256,7 +236,6 @@ function CarRentalPage() {
           </p>
           <Link
             to="/book"
-            search={{ car: undefined }}
             className="inline-block bg-navy text-cream px-10 py-4 eyebrow hover:bg-gold hover:text-navy transition-colors"
           >
             Book a Vehicle
@@ -335,8 +314,7 @@ function VehicleCard({
             {expanded ? "Hide details" : "View details"}
           </button>
           <Link
-            to="/book"
-            search={{ car: car.id }}
+            to={`/book?car=${car.id}`}
             className="eyebrow text-xs bg-navy text-cream px-5 py-2 hover:bg-gold hover:text-navy transition-colors"
           >
             Reserve

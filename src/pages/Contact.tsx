@@ -1,25 +1,6 @@
-import { createFileRoute } from "@tanstack/react-router";
 import { useState, type FormEvent } from "react";
 import { z } from "zod";
 import { contact } from "@/config/settings";
-
-export const Route = createFileRoute("/contact")({
-  head: () => ({
-    meta: [
-      { title: "Contact — Noble Nexus Car Rentals" },
-      {
-        name: "description",
-        content: "Reach Noble Nexus Car Rentals by phone, email or from any of our global offices.",
-      },
-      { property: "og:title", content: "Contact — Noble Nexus Car Rentals" },
-      {
-        property: "og:description",
-        content: "Reach Noble Nexus Car Rentals from any of our global offices.",
-      },
-    ],
-  }),
-  component: ContactPage,
-});
 
 const formSchema = z.object({
   name: z.string().trim().min(1, "Name is required").max(100),
@@ -28,7 +9,7 @@ const formSchema = z.object({
   message: z.string().trim().min(10, "Tell us a little more").max(1000),
 });
 
-function ContactPage() {
+export function ContactPage() {
   const [submitted, setSubmitted] = useState(false);
   const [errors, setErrors] = useState<Record<string, string>>({});
 

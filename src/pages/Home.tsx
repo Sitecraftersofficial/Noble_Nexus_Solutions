@@ -3,30 +3,18 @@
  * Sections: Hero, Trust bar, Featured fleet (from cars.json),
  * Why-rent-with-us (policies), How it works, Testimonials, Contact CTA.
  */
-import { createFileRoute, Link } from "@tanstack/react-router";
+import { useMemo, useState } from "react";
+import { Link } from "@/lib/Link";
 import { ShieldCheck, UserRound, CalendarCheck, MapPin, ArrowRight } from "lucide-react";
 import { site, stats, policies } from "@/config/settings";
 import { cars, formatPrice } from "@/data/cars";
 import { Tilt } from "@/lib/nx-motion";
 
-export const Route = createFileRoute("/")({
-  head: () => ({
-    meta: [
-      { title: `${site.name} — ${site.tagline}` },
-      { name: "description", content: site.description },
-      { property: "og:title", content: `${site.name} — ${site.tagline}` },
-      { property: "og:description", content: site.description },
-      { property: "og:image", content: heroImg },
-    ],
-  }),
-  component: Home,
-});
-
 const heroImg = "/images/cars/hero-fleet.jpg";
 
 const POLICY_ICONS = { ShieldCheck, UserRound, CalendarCheck, MapPin } as const;
 
-function Home() {
+export function HomePage() {
   const featured = cars.filter((c) => c.featured);
 
   return (
@@ -70,7 +58,6 @@ function Home() {
             </Link>
             <Link
               to="/book"
-              search={{ car: undefined }}
               className="border border-cream/30 text-cream px-10 py-4 eyebrow hover:bg-cream/10 transition-colors"
             >
               Reserve Now
@@ -111,8 +98,7 @@ function Home() {
           {featured.map((car, i) => (
             <Tilt key={car.id} className={`nx-reveal nx-delay-${(i % 3) + 1}`}>
               <Link
-                to="/book"
-                search={{ car: car.id }}
+                to={`/book?car=${car.id}`}
                 className="group block bg-cream border border-navy/10 hover:border-gold transition-colors nx-lift"
               >
                 <div className="overflow-hidden aspect-4/3">
@@ -231,7 +217,6 @@ function Home() {
           <div className="flex flex-col sm:flex-row justify-center gap-4">
             <Link
               to="/book"
-              search={{ car: undefined }}
               className="inline-block bg-navy text-cream px-10 py-4 eyebrow hover:bg-gold hover:text-navy transition-colors"
             >
               Reserve a Vehicle

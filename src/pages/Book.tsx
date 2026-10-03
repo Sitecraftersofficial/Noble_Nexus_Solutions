@@ -5,41 +5,21 @@
  * payment step is wired with a placeholder submit that clearly states MoMo.
  * Vehicle preselect comes from ?car=<id> when arriving from a fleet card.
  */
-import { createFileRoute, Link } from "@tanstack/react-router";
 import { useMemo, useState } from "react";
+import { Link } from "@/lib/Link";
 import { Check, Smartphone, Gauge, Fuel, Users, Settings2 } from "lucide-react";
 import { contact } from "@/config/settings";
 import { cars, locations, formatPrice, getCarById, type Car } from "@/data/cars";
 
-export const Route = createFileRoute("/book")({
-  validateSearch: (search: Record<string, unknown>) => ({
-    car: typeof search.car === "string" ? search.car : undefined,
-  }),
-  head: () => ({
-    meta: [
-      { title: "Book a Vehicle — Noble Nexus Car Rentals" },
-      {
-        name: "description",
-        content:
-          "Reserve your rental in minutes and pay with MTN Mobile Money. Daily, weekly and monthly rates with optional chauffeur.",
-      },
-      { property: "og:title", content: "Book a Vehicle — Noble Nexus Car Rentals" },
-      {
-        property: "og:description",
-        content: "Reserve your rental in minutes and pay with MTN Mobile Money.",
-      },
-    ],
-  }),
-  component: BookPage,
-});
-
 type PaymentState = "form" | "processing" | "done";
 
-function BookPage() {
-  const { car: carParam } = Route.useSearch() as { car?: string };
-  const preselected = getCarById(carParam ?? "") ?? null;
+function readCarParam(): string | undefined {
+  const param = new URLSearchParams(window.location.search).get("car");
+  return param ?? undefined;
+}
 
-  const [carId, setCarId] = useState<string>(preselected?.id ?? "");
+export function BookPage() {
+  const [carId, setCarId] = useState<string>(getCarById(readCarParam() ?? "")?.id ?? "");
   const car = getCarById(carId);
 
   const [pickupDate, setPickupDate] = useState("");

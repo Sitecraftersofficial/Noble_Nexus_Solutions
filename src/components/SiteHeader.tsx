@@ -3,12 +3,12 @@
  * Reads brand + nav items from src/config/settings.ts.
  * Renders as a sticky navy bar with gold accents.
  */
-import { Link } from "@tanstack/react-router";
 import { useEffect, useState } from "react";
 import { Menu, X } from "lucide-react";
+import { Link } from "@/lib/Link";
 import { nav, site } from "@/config/settings";
 
-export function SiteHeader() {
+export function SiteHeader({ path }: { path: string }) {
   const [open, setOpen] = useState(false);
 
   // Lock body scroll while the mobile menu is open.
@@ -30,6 +30,15 @@ export function SiteHeader() {
     window.addEventListener("keydown", onKey);
     return () => window.removeEventListener("keydown", onKey);
   }, [open]);
+
+  // Close the menu whenever the route changes.
+  useEffect(() => {
+    setOpen(false);
+  }, [path]);
+
+  function isActive(to: string) {
+    return to === "/" ? path === "/" : path.startsWith(to);
+  }
 
   return (
     <header className="sticky top-0 z-50 w-full bg-navy text-cream border-b border-gold/20">
@@ -55,9 +64,7 @@ export function SiteHeader() {
             <Link
               key={item.to}
               to={item.to}
-              className="hover:text-gold transition-colors"
-              activeProps={{ className: "text-gold" }}
-              activeOptions={{ exact: item.to === "/" }}
+              className={`hover:text-gold transition-colors ${isActive(item.to) ? "text-gold" : ""}`}
             >
               {item.label}
             </Link>
@@ -65,7 +72,7 @@ export function SiteHeader() {
         </nav>
 
         <Link
-          to="/contact"
+          to="/book"
           className="hidden lg:inline-flex px-5 py-2 border border-gold text-gold eyebrow text-xs hover:bg-gold hover:text-navy transition-all"
         >
           Reserve
@@ -92,8 +99,7 @@ export function SiteHeader() {
                 <Link
                   to={item.to}
                   onClick={() => setOpen(false)}
-                  className="block hover:text-gold transition-colors"
-                  activeProps={{ className: "text-gold" }}
+                  className={`block hover:text-gold transition-colors ${isActive(item.to) ? "text-gold" : ""}`}
                 >
                   {item.label}
                 </Link>
@@ -101,7 +107,7 @@ export function SiteHeader() {
             ))}
             <li>
               <Link
-                to="/contact"
+                to="/book"
                 onClick={() => setOpen(false)}
                 className="inline-block mt-2 px-6 py-2 border border-gold text-gold hover:bg-gold hover:text-navy transition-all"
               >
