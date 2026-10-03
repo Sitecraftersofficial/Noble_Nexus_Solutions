@@ -6,10 +6,16 @@ import { contact } from "@/config/settings";
 export const Route = createFileRoute("/contact")({
   head: () => ({
     meta: [
-      { title: "Contact — Vanguard" },
-      { name: "description", content: "Reach Vanguard by appointment from any of our global offices. Discretion guaranteed." },
-      { property: "og:title", content: "Contact — Vanguard" },
-      { property: "og:description", content: "Reach Vanguard by appointment from any of our global offices." },
+      { title: "Contact — Noble Nexus Car Rentals" },
+      {
+        name: "description",
+        content: "Reach Noble Nexus Car Rentals by phone, email or from any of our global offices.",
+      },
+      { property: "og:title", content: "Contact — Noble Nexus Car Rentals" },
+      {
+        property: "og:description",
+        content: "Reach Noble Nexus Car Rentals from any of our global offices.",
+      },
     ],
   }),
   component: ContactPage,
@@ -18,7 +24,7 @@ export const Route = createFileRoute("/contact")({
 const formSchema = z.object({
   name: z.string().trim().min(1, "Name is required").max(100),
   email: z.string().trim().email("Enter a valid email").max(255),
-  interest: z.enum(["Realty", "Transport", "Both"]),
+  interest: z.enum(["Reservation", "Long-term rental", "Chauffeur service", "Other"]),
   message: z.string().trim().min(10, "Tell us a little more").max(1000),
 });
 
@@ -47,13 +53,12 @@ function ContactPage() {
     <>
       <section className="bg-navy text-cream py-24">
         <div className="container-page max-w-3xl">
-          <p className="eyebrow text-gold mb-6">By appointment</p>
+          <p className="eyebrow text-gold mb-6">Reservations & inquiries</p>
           <h1 className="font-serif text-5xl md:text-7xl leading-[1.05] mb-6">
-            Begin a <span className="italic text-gold">conversation</span>.
+            Talk to the <span className="italic text-gold">rental desk</span>.
           </h1>
           <p className="text-cream/70 text-lg max-w-xl">
-            Our advisors respond within one business day. All inquiries are
-            treated with absolute discretion.
+            Our rental team responds within one business hour, 24/7 for existing bookings.
           </p>
         </div>
       </section>
@@ -65,9 +70,7 @@ function ContactPage() {
             <div className="border border-gold p-10 text-center">
               <p className="eyebrow text-gold mb-4">Received</p>
               <h2 className="font-serif text-3xl text-navy mb-3">Thank you.</h2>
-              <p className="text-navy/60">
-                An advisor will be in touch within one business day.
-              </p>
+              <p className="text-navy/60">An advisor will be in touch within one business day.</p>
             </div>
           ) : (
             <form onSubmit={onSubmit} noValidate className="space-y-6">
@@ -94,12 +97,13 @@ function ContactPage() {
                 <select
                   id="interest"
                   name="interest"
-                  defaultValue="Realty"
+                  defaultValue="Reservation"
                   className="w-full bg-transparent border-b border-border focus:border-gold outline-none py-3 text-navy"
                 >
-                  <option value="Realty">Real Estate</option>
-                  <option value="Transport">Transport & Logistics</option>
-                  <option value="Both">Both</option>
+                  <option value="Reservation">Make a reservation</option>
+                  <option value="Long-term rental">Long-term / corporate rental</option>
+                  <option value="Chauffeur service">Chauffeur service</option>
+                  <option value="Other">Something else</option>
                 </select>
               </Field>
               <Field label="Message" id="message" error={errors.message}>
@@ -125,10 +129,12 @@ function ContactPage() {
         {/* Details */}
         <aside className="md:col-span-2 space-y-10">
           <div>
-            <p className="eyebrow text-gold mb-4">Headquarters</p>
+            <p className="eyebrow text-gold mb-4">Main Office</p>
             <address className="not-italic text-navy/80 leading-relaxed">
-              {contact.address.line1}<br />
-              {contact.address.line2}<br />
+              {contact.address.line1}
+              <br />
+              {contact.address.line2}
+              <br />
               {contact.address.country}
             </address>
           </div>
@@ -140,15 +146,33 @@ function ContactPage() {
               </a>
             </p>
             <p className="text-navy/80">
-              <a className="hover:text-gold transition-colors" href={`tel:${contact.phone.replace(/\s/g, "")}`}>
+              <a
+                className="hover:text-gold transition-colors"
+                href={`tel:${contact.phone.replace(/\s/g, "")}`}
+              >
                 {contact.phone}
               </a>
             </p>
+            <p className="text-navy/80">
+              <a
+                className="hover:text-gold transition-colors"
+                href={`https://wa.me/${contact.whatsapp.replace(/\D/g, "")}`}
+                target="_blank"
+                rel="noopener noreferrer"
+              >
+                WhatsApp: {contact.whatsapp}
+              </a>
+            </p>
+            <p className="text-navy/60 text-sm mt-2">
+              Payments: MTN MoMo · Airtel Money · Visa/Mastercard · Bank transfer
+            </p>
           </div>
           <div>
-            <p className="eyebrow text-gold mb-4">Offices</p>
+            <p className="eyebrow text-gold mb-4">Branches & Pickup Points</p>
             <ul className="text-navy/80 space-y-1">
-              {contact.offices.map((o) => <li key={o}>{o}</li>)}
+              {contact.offices.map((o) => (
+                <li key={o}>{o}</li>
+              ))}
             </ul>
           </div>
         </aside>

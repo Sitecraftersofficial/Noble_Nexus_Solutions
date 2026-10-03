@@ -5,21 +5,22 @@
  * Edit ONLY this file to update company name, contact info, social links,
  * navigation, or address — every page reads from these exports.
  *
- * Add new fields here as needed; do not hard-code business info in components.
+ * Edit ONLY this file to update company name, contact info, navigation, etc.
+ * Car inventory lives separately in src/data/cars.json.
  */
 
 export const site = {
   /** Brand name shown in header, footer, meta tags, emails, invoices, etc. */
-  name: "Nexus NOble Solutions & TRANSPORT SERVICES",
+  name: "Noble Nexus Car Rentals",
   /** Short brand used in compact UI (header logo wordmark) */
-  shortName: "Nexus",
+  shortName: "Noble Nexus",
   /** Optional sub-line (e.g. legal entity) */
-  legalName: "Nexus NOble Solutions & Transport Services",
+  legalName: "Noble Nexus Solutions — Car Rentals",
   /** Short tagline for hero / SEO */
-  tagline: "Premium real estate acquisitions and full-spectrum transport services.",
+  tagline: "Premium car rentals for every journey.",
   /** Long description for meta tags */
   description:
-    "Nexus NOble Solutionss & Transport Services — curated properties, executive car rental, taxi booking, and cargo logistics under one trusted brand.",
+    "Noble Nexus Car Rentals — Rwanda's premium car rental. Kigali airport delivery, self-drive or chauffeured, from economy to luxury.",
   /** Founded year (for footer copyright) */
   foundedYear: 1984,
 } as const;
@@ -31,21 +32,22 @@ export const site = {
  * Edit the label or URL here to update the credit site-wide.
  */
 export const credit = {
-  prefix: "Site Created By",
-  label: "SiteCrafter",
-  url: "https://www.sitecraftersz.co/", // TODO: replace with your real URL
+  prefix: "Made in Rwanda by the",
+  label: "Sitecrafters Team",
+  url: "https://www.sitecraftersltd.com/",
 } as const;
 
 export const contact = {
-  phone: "0789900000",
-  email: "concierge@vanguard.example",
+  phone: "+250 788 000 000",
+  whatsapp: "+250 788 000 000",
+  email: "rentals@noblenexus.rw",
   address: {
-    line1: "22 Berkeley Square",
-    line2: "Mayfair, London W1J 6EB",
-    country: "United Kingdom",
+    line1: "KG 7 Ave, Kiyovu",
+    line2: "Nyarugenge District",
+    country: "Kigali, Rwanda",
   },
-  /** Office locations shown in footer / contact page */
-  offices: ["London", "New York", "Singapore", "Dubai"],
+  /** Branch / pickup locations shown in footer / contact page */
+  offices: ["Kigali — KG 7 Ave", "Kigali — Remera", "Kigali — Nyarutarama", "Rubavu — Lake Kivu"],
 } as const;
 
 export const social = {
@@ -57,28 +59,47 @@ export const social = {
 /** Primary navigation (used by header + footer) */
 export const nav = [
   { label: "Home", to: "/" as const },
-  { label: "Real Estate", to: "/properties" as const },
-  { label: "Transport Hub", to: "/transport" as const },
-  { label: "Car Rental", to: "/car-rental" as const },
-  { label: "Taxi", to: "/taxi" as const },
-  { label: "Cargo", to: "/cargo" as const },
+  { label: "Fleet", to: "/car-rental" as const },
+  { label: "Book", to: "/book" as const },
   { label: "About", to: "/about" as const },
   { label: "Contact", to: "/contact" as const },
 ];
 
 /** Quick-access floating buttons (homepage + sticky) */
 export const quickAccess = [
-  { label: "Browse Properties", to: "/properties" as const, icon: "Home" },
-  { label: "Rent a Car", to: "/car-rental" as const, icon: "Car" },
-  { label: "Book Taxi", to: "/taxi" as const, icon: "Navigation" },
-  { label: "Cargo Transport", to: "/cargo" as const, icon: "Truck" },
+  { label: "Browse Fleet", to: "/car-rental" as const, icon: "Car" },
+  { label: "Reserve Now", to: "/book" as const, icon: "Calendar" },
   { label: "Contact Us", to: "/contact" as const, icon: "Phone" },
 ];
 
 /** Headline statistics on the home Trust Bar — edit values here */
 export const stats = [
-  { value: "$4.2B", label: "Assets Managed" },
-  { value: "12", label: "Global Offices" },
-  { value: "24/7", label: "Executive Support" },
-  { value: "150+", label: "Corporate Clients" },
+  { value: "120+", label: "Vehicles in Fleet" },
+  { value: "30", label: "Districts Served" },
+  { value: "24/7", label: "Roadside Assistance" },
+  { value: "98%", label: "Five-Star Reviews" },
 ];
+
+/** Rental policy highlights shown on home + fleet pages */
+export const policies = [
+  {
+    icon: "ShieldCheck",
+    title: "Full Insurance Included",
+    text: "Comprehensive cover — third-party, collision and theft — on every rental.",
+  },
+  {
+    icon: "UserRound",
+    title: "Optional Chauffeur",
+    text: "Add a vetted, Kinyarwanda–English–French speaking driver to any booking for RWF 90,000/day.",
+  },
+  {
+    icon: "CalendarCheck",
+    title: "Free Cancellation",
+    text: "Cancel or amend free of charge up to 48 hours before pickup.",
+  },
+  {
+    icon: "MapPin",
+    title: "Airport Delivery",
+    text: "Free meet-and-greet delivery at Kigali International Airport and city hotels.",
+  },
+] as const;

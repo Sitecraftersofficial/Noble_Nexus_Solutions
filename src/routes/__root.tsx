@@ -7,10 +7,10 @@ import {
   HeadContent,
   Scripts,
 } from "@tanstack/react-router";
-import { useEffect, type ReactNode } from "react";
+import { type ReactNode, useEffect } from "react";
+import { observeReveals } from "../lib/nx-motion";
 
 import appCss from "../styles.css?url";
-import { reportLovableError } from "../lib/lovable-error-reporting";
 import { SiteHeader } from "@/components/SiteHeader";
 import { SiteFooter } from "@/components/SiteFooter";
 import { FloatingQuickAccess } from "@/components/FloatingQuickAccess";
@@ -39,10 +39,6 @@ function NotFoundComponent() {
 function ErrorComponent({ error, reset }: { error: Error; reset: () => void }) {
   console.error(error);
   const router = useRouter();
-  useEffect(() => {
-    reportLovableError(error, { boundary: "tanstack_root_error_component" });
-  }, [error]);
-
   return (
     <div className="flex min-h-[70vh] items-center justify-center px-4">
       <div className="max-w-md text-center">
@@ -53,7 +49,10 @@ function ErrorComponent({ error, reset }: { error: Error; reset: () => void }) {
         </p>
         <div className="flex flex-wrap justify-center gap-3">
           <button
-            onClick={() => { router.invalidate(); reset(); }}
+            onClick={() => {
+              router.invalidate();
+              reset();
+            }}
             className="px-6 py-3 bg-navy text-cream eyebrow hover:bg-gold hover:text-navy transition-colors"
           >
             Try again
@@ -81,14 +80,6 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
       { property: "og:description", content: site.description },
       { property: "og:type", content: "website" },
       { name: "twitter:card", content: "summary_large_image" },
-      { title: "Lovable App" },
-      { property: "og:title", content: "Lovable App" },
-      { name: "twitter:title", content: "Lovable App" },
-      { name: "description", content: "Prestige Connect is a premium, enterprise-level website and management system for real estate and transport services." },
-      { property: "og:description", content: "Prestige Connect is a premium, enterprise-level website and management system for real estate and transport services." },
-      { name: "twitter:description", content: "Prestige Connect is a premium, enterprise-level website and management system for real estate and transport services." },
-      { property: "og:image", content: "https://pub-bb2e103a32db4e198524a2e9ed8f35b4.r2.dev/634fc673-a594-4574-928c-61709969cfb9/id-preview-4b732178--b6985672-4d8f-4bdc-9f77-b07b168afd5b.lovable.app-1780505429923.png" },
-      { name: "twitter:image", content: "https://pub-bb2e103a32db4e198524a2e9ed8f35b4.r2.dev/634fc673-a594-4574-928c-61709969cfb9/id-preview-4b732178--b6985672-4d8f-4bdc-9f77-b07b168afd5b.lovable.app-1780505429923.png" },
     ],
     links: [{ rel: "stylesheet", href: appCss }],
   }),
@@ -114,6 +105,13 @@ function RootShell({ children }: { children: ReactNode }) {
 
 function RootComponent() {
   const { queryClient } = Route.useRouteContext();
+  const router = useRouter();
+
+  // Re-run the reveal observer whenever the active route changes.
+  const pathname = router.state.location.pathname;
+  useEffect(() => {
+    return observeReveals();
+  }, [pathname]);
 
   return (
     <QueryClientProvider client={queryClient}>

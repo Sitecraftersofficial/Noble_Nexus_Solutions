@@ -4,10 +4,10 @@
  * src/config/settings.ts → quickAccess.
  */
 import { Link } from "@tanstack/react-router";
-import { Home, Car, Navigation, Truck, Phone } from "lucide-react";
+import { Car, Calendar, Phone } from "lucide-react";
 import { quickAccess } from "@/config/settings";
 
-const ICONS = { Home, Car, Navigation, Truck, Phone } as const;
+const ICONS = { Car, Calendar, Phone } as const;
 
 export function FloatingQuickAccess() {
   return (
@@ -16,7 +16,7 @@ export function FloatingQuickAccess() {
       className="fixed right-3 bottom-4 z-40 hidden md:flex flex-col gap-2"
     >
       {quickAccess.map((item) => {
-        const Icon = ICONS[item.icon as keyof typeof ICONS] ?? Home;
+        const Icon = ICONS[item.icon as keyof typeof ICONS] ?? Car;
         return (
           <Link
             key={item.to}
