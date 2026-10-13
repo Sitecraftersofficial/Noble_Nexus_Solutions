@@ -13,6 +13,10 @@ import { Tilt } from "@/lib/nx-motion";
 const heroImg = "/images/cars/hero-fleet.jpg";
 
 const POLICY_ICONS = { ShieldCheck, UserRound, CalendarCheck, MapPin } as const;
+const FEATURED_IMAGE_OVERRIDES: Record<string, string> = {
+  "volkswagen-golf": "/images/cars/hyundai-santa-fe-2025.jpg",
+  "mercedes-eclass": "/images/cars/byd-sealion-6-2024.jpg",
+};
 
 export function HomePage() {
   const featured = cars.filter((c) => c.featured);
@@ -95,7 +99,8 @@ export function HomePage() {
           </Link>
         </div>
         <div className="grid md:grid-cols-3 gap-8">
-          {featured.map((car, i) => (
+          {/* Featured cards are data-driven; remove slice to restore all featured vehicles. */}
+          {featured.slice(0, 3).map((car, i) => (
             <Tilt key={car.id} className={`nx-reveal nx-delay-${(i % 3) + 1}`}>
               <Link
                 to={`/book?car=${car.id}`}
@@ -103,7 +108,7 @@ export function HomePage() {
               >
                 <div className="overflow-hidden aspect-4/3">
                   <img
-                    src={car.image}
+                    src={FEATURED_IMAGE_OVERRIDES[car.id] ?? car.image}
                     alt={car.name}
                     loading="lazy"
                     className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105"
@@ -114,7 +119,7 @@ export function HomePage() {
                     <p className="eyebrow text-gold text-xs mb-1">{car.category}</p>
                     <h3 className="font-serif text-xl text-navy">{car.name}</h3>
                   </div>
-                  <span className="text-sm text-navy/60">from {formatPrice(car.daily)}/day</span>
+                  <span className="text-sm text-navy/60">Talk with us</span>
                 </div>
               </Link>
             </Tilt>

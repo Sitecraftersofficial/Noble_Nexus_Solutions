@@ -1,0 +1,18 @@
+Kia Sorento 2015
+Image: public/images/cars/kia-sorento-2015.jpg
+Photographer: OSX
+Source: https://commons.wikimedia.org/wiki/File:2015_Kia_Sorento_(UM_MY15)_Platinum_CRDi_wagon_(2015-11-13)_01.jpg
+License: Public domain
+
+Hyundai Santa Fe 2025
+Image: public/images/cars/hyundai-santa-fe-2025.jpg
+Photographer: Oleg Yunakov
+Source: https://commons.wikimedia.org/wiki/File:2025_Hyundai_Santa_Fe.jpg
+License: CC BY-SA 4.0 (https://creativecommons.org/licenses/by-sa/4.0/)
+Attribution: Oleg Yunakov / CC BY-SA 4.0
+
+BYD Sealion 6 2024
+Image: public/images/cars/byd-sealion-6-2024.jpg
+Photographer: Agratsa
+Source: https://commons.wikimedia.org/wiki/File:2024_BYD_Sealion_6_2.jpg
+License: CC0 (https://creativecommons.org/publicdomain/zero/1.0/)

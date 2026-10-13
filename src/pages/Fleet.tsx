@@ -23,6 +23,20 @@ import { cars, categories, locations, formatPrice, type Car, type CarCategory } 
 import { Tilt } from "@/lib/nx-motion";
 
 const CATEGORIES: Array<CarCategory | "All"> = ["All", ...categories];
+const VEHICLE_DISPLAY_OVERRIDES: Record<string, { name: string; image: string }> = {
+  "toyota-corolla": {
+    name: "Kia Sorento 2015",
+    image: "/images/cars/kia-sorento-2015.jpg",
+  },
+  "volkswagen-golf": {
+    name: "Hyundai Santa Fe 2025",
+    image: "/images/cars/hyundai-santa-fe-2025.jpg",
+  },
+  "mercedes-eclass": {
+    name: "BYD Sealion 2024",
+    image: "/images/cars/byd-sealion-6-2024.jpg",
+  },
+};
 
 export function FleetPage() {
   const [category, setCategory] = useState<CarCategory | "All">("All");
@@ -41,6 +55,8 @@ export function FleetPage() {
       return true;
     });
   }, [category, location, maxPrice, query]);
+  // Temporary display limit; remove the slice to show all vehicles matching the filters.
+  const visibleVehicles = filtered.slice(0, 3);
 
   return (
     <>
@@ -121,15 +137,18 @@ export function FleetPage() {
           </label>
         </div>
         <p className="eyebrow text-xs text-navy/50 mb-8">
-          {filtered.length} vehicle{filtered.length === 1 ? "" : "s"} available
+          Showing {visibleVehicles.length} of {filtered.length} matching vehicles ({cars.length} in
+          inventory)
         </p>
 
         {/* Vehicle cards */}
         <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
-          {filtered.map((v, i) => (
+          {visibleVehicles.map((v, i) => (
             <Tilt key={v.id} className="nx-reveal" max={6}>
               <VehicleCard
                 car={v}
+                displayName={VEHICLE_DISPLAY_OVERRIDES[v.id]?.name}
+                displayImage={VEHICLE_DISPLAY_OVERRIDES[v.id]?.image}
                 expanded={expanded === v.id}
                 onToggle={() => setExpanded(expanded === v.id ? null : v.id)}
                 delay={(i % 3) + 1}
@@ -250,11 +269,15 @@ export function FleetPage() {
 
 function VehicleCard({
   car,
+  displayName,
+  displayImage,
   expanded,
   onToggle,
   delay = 1,
 }: {
   car: Car;
+  displayName?: string;
+  displayImage?: string;
   expanded: boolean;
   onToggle: () => void;
   delay?: number;
@@ -265,8 +288,8 @@ function VehicleCard({
     >
       <div className="overflow-hidden aspect-4/3 relative">
         <img
-          src={car.image}
-          alt={car.name}
+          src={displayImage ?? car.image}
+          alt={displayName ?? car.name}
           loading="lazy"
           className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105"
         />
@@ -285,7 +308,7 @@ function VehicleCard({
         <p className="eyebrow text-gold text-xs mb-2">
           {car.category} · {car.year} · {car.location}
         </p>
-        <h3 className="font-serif text-2xl text-navy mb-4">{car.name}</h3>
+        <h3 className="font-serif text-2xl text-navy mb-4">{displayName ?? car.name}</h3>
         <div className="flex gap-4 text-xs text-navy/60 mb-5">
           <span className="flex items-center gap-1">
             <Users className="size-4 text-gold" />
@@ -301,9 +324,9 @@ function VehicleCard({
           </span>
         </div>
         <dl className="grid grid-cols-3 gap-2 mb-5 border-y border-navy/10 py-4">
-          <Price label="Daily" value={car.daily} />
-          <Price label="Weekly" value={car.weekly} />
-          <Price label="Monthly" value={car.monthly} />
+          <Price label="Daily" value={displayName ? null : car.daily} />
+          <Price label="Weekly" value={displayName ? null : car.weekly} />
+          <Price label="Monthly" value={displayName ? null : car.monthly} />
         </dl>
         <div className="mt-auto flex items-center justify-between">
           <button
@@ -365,11 +388,13 @@ function SpecRow({ icon: Icon, text }: { icon: typeof Users; text: string }) {
   );
 }
 
-function Price({ label, value }: { label: string; value: number }) {
+function Price({ label, value }: { label: string; value: number | null }) {
   return (
     <div className="text-center">
       <dt className="eyebrow text-[10px] text-navy/50 mb-1">{label}</dt>
-      <dd className="font-serif text-lg text-navy">{formatPrice(value)}</dd>
+      <dd className="font-serif text-lg text-navy">
+        {value === null ? "Talk with us" : formatPrice(value)}
+      </dd>
     </div>
   );
 }
