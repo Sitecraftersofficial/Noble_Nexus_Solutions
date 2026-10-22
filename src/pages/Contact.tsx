@@ -145,7 +145,7 @@ export function ContactPage() {
               </a>
             </p>
             <p className="text-navy/60 text-sm mt-2">
-              Payments: MTN MoMo · Airtel Money · Visa/Mastercard · Bank transfer
+              Quotes and rental arrangements are handled directly on WhatsApp.
             </p>
           </div>
           <div>

@@ -10,7 +10,7 @@
  */
 
 export const site = {
-  /** Brand name shown in header, footer, meta tags, emails, invoices, etc. */
+  /** Brand name shown in header, footer and meta tags. */
   name: "Noble Nexus Car Rentals",
   /** Short brand used in compact UI (header logo wordmark) */
   shortName: "Noble Nexus",
@@ -90,7 +90,7 @@ export const policies = [
   {
     icon: "UserRound",
     title: "Optional Chauffeur",
-    text: "Add a vetted, Kinyarwanda–English–French speaking driver to any booking for RWF 90,000/day.",
+    text: "Add a vetted, Kinyarwanda–English–French speaking driver to any booking. Ask us on WhatsApp.",
   },
   {
     icon: "CalendarCheck",

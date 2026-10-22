@@ -3,7 +3,7 @@
  */
 import { Link } from "@/lib/Link";
 import { site, stats } from "@/config/settings";
-import heroImg from "/images/cars/hero-fleet.jpg";
+const heroImg = "/images/cars/toyotaLcPrado-2.jpg";
 
 const TIMELINE = [
   {
@@ -64,7 +64,7 @@ export function AboutPage() {
             {
               label: "Mission",
               title: "Keys without friction.",
-              body: "From quote to handover in hours, not days — with every cost disclosed up front.",
+              body: "From enquiry to handover in hours, not days — with clear rental arrangements agreed directly with our team.",
             },
             {
               label: "Vision",

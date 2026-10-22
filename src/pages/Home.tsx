@@ -7,17 +7,12 @@ import { useMemo, useState } from "react";
 import { Link } from "@/lib/Link";
 import { ShieldCheck, UserRound, CalendarCheck, MapPin, ArrowRight } from "lucide-react";
 import { site, stats, policies } from "@/config/settings";
-import { cars, formatPrice } from "@/data/cars";
+import { cars } from "@/data/cars";
 import { Tilt } from "@/lib/nx-motion";
 
-const heroImg = "/images/cars/hero-fleet.jpg";
+const heroImg = "/images/cars/toyotaLcPrado-2.jpg";
 
 const POLICY_ICONS = { ShieldCheck, UserRound, CalendarCheck, MapPin } as const;
-const FEATURED_IMAGE_OVERRIDES: Record<string, string> = {
-  "volkswagen-golf": "/images/cars/hyundai-santa-fe-2025.jpg",
-  "mercedes-eclass": "/images/cars/byd-sealion-6-2024.jpg",
-};
-
 export function HomePage() {
   const featured = cars.filter((c) => c.featured);
 
@@ -88,7 +83,7 @@ export function HomePage() {
           <div>
             <p className="eyebrow text-gold mb-4">Featured Fleet</p>
             <h2 className="font-serif text-4xl md:text-5xl text-navy leading-tight">
-              Seven categories. <span className="italic">Transparent pricing.</span>
+              Seven categories. <span className="italic">Personal service.</span>
             </h2>
           </div>
           <Link
@@ -108,7 +103,7 @@ export function HomePage() {
               >
                 <div className="overflow-hidden aspect-4/3">
                   <img
-                    src={FEATURED_IMAGE_OVERRIDES[car.id] ?? car.image}
+                    src={car.image}
                     alt={car.name}
                     loading="lazy"
                     className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105"
@@ -163,12 +158,12 @@ export function HomePage() {
             {
               n: "01",
               title: "Choose your vehicle",
-              text: "Browse the fleet by category, seats or budget — every car shows full daily, weekly and monthly rates in RWF.",
+              text: "Browse the fleet by category and vehicle type, then message us on WhatsApp for a tailored quote.",
             },
             {
               n: "02",
               title: "Reserve online",
-              text: "Pick your dates, branch or KIA delivery, and driver option. Confirmation within the hour, 24/7 — pay with MoMo, card or bank transfer.",
+              text: "Pick your dates, branch or KIA delivery, and driver option. Our team confirms availability and details on WhatsApp.",
             },
             {
               n: "03",

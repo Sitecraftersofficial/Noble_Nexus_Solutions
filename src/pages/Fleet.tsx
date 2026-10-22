@@ -17,31 +17,15 @@ import {
   ChevronDown,
   MapPin as MapPinIcon,
 } from "lucide-react";
-import heroImg from "/images/cars/hero-fleet.jpg";
+const heroImg = "/images/cars/toyotaLcPrado-2.jpg";
 import { policies } from "@/config/settings";
-import { cars, categories, locations, formatPrice, type Car, type CarCategory } from "@/data/cars";
+import { cars, categories, locations, type Car, type CarCategory } from "@/data/cars";
 import { Tilt } from "@/lib/nx-motion";
 
 const CATEGORIES: Array<CarCategory | "All"> = ["All", ...categories];
-const VEHICLE_DISPLAY_OVERRIDES: Record<string, { name: string; image: string }> = {
-  "toyota-corolla": {
-    name: "Kia Sorento 2015",
-    image: "/images/cars/kia-sorento-2015.jpg",
-  },
-  "volkswagen-golf": {
-    name: "Hyundai Santa Fe 2025",
-    image: "/images/cars/hyundai-santa-fe-2025.jpg",
-  },
-  "mercedes-eclass": {
-    name: "BYD Sealion 2024",
-    image: "/images/cars/byd-sealion-6-2024.jpg",
-  },
-};
-
 export function FleetPage() {
   const [category, setCategory] = useState<CarCategory | "All">("All");
   const [location, setLocation] = useState<string>("Any");
-  const [maxPrice, setMaxPrice] = useState<number>(600000);
   const [query, setQuery] = useState("");
   const [expanded, setExpanded] = useState<string | null>(null);
 
@@ -49,12 +33,11 @@ export function FleetPage() {
     return cars.filter((c) => {
       if (category !== "All" && c.category !== category) return false;
       if (location !== "Any" && c.location !== location) return false;
-      if (c.daily > maxPrice) return false;
       if (query && !`${c.name} ${c.make} ${c.model}`.toLowerCase().includes(query.toLowerCase()))
         return false;
       return true;
     });
-  }, [category, location, maxPrice, query]);
+  }, [category, location, query]);
   // Temporary display limit; remove the slice to show all vehicles matching the filters.
   const visibleVehicles = filtered.slice(0, 3);
 
@@ -76,8 +59,8 @@ export function FleetPage() {
             Drive in <span className="italic text-gold">comfort</span>.
           </h1>
           <p className="text-cream/70 text-lg max-w-xl">
-            {cars.length} vehicles across {categories.length} categories — transparent pricing,
-            optional chauffeur and comprehensive insurance.
+            {cars.length} vehicles across {categories.length} categories — tailored quotes on
+            WhatsApp, optional chauffeur and comprehensive insurance.
           </p>
         </div>
       </section>
@@ -85,7 +68,7 @@ export function FleetPage() {
       {/* Filters */}
       <section className="container-page py-16">
         <p className="eyebrow text-gold mb-4">Browse the Fleet</p>
-        <div className="grid md:grid-cols-4 gap-4 mb-8 bg-secondary border border-navy/10 p-6">
+        <div className="grid md:grid-cols-3 gap-4 mb-8 bg-secondary border border-navy/10 p-6">
           <label className="block">
             <span className="block eyebrow text-xs text-navy mb-2">Search</span>
             <input
@@ -121,20 +104,6 @@ export function FleetPage() {
               ))}
             </select>
           </label>
-          <label className="block">
-            <span className="block eyebrow text-xs text-navy mb-2">
-              Max daily rate — RWF {maxPrice.toLocaleString("en-US")}
-            </span>
-            <input
-              type="range"
-              min={50000}
-              max={600000}
-              step={10000}
-              value={maxPrice}
-              onChange={(e) => setMaxPrice(Number(e.target.value))}
-              className="w-full accent-[#0A1F44] mt-3"
-            />
-          </label>
         </div>
         <p className="eyebrow text-xs text-navy/50 mb-8">
           Showing {visibleVehicles.length} of {filtered.length} matching vehicles ({cars.length} in
@@ -147,8 +116,6 @@ export function FleetPage() {
             <Tilt key={v.id} className="nx-reveal" max={6}>
               <VehicleCard
                 car={v}
-                displayName={VEHICLE_DISPLAY_OVERRIDES[v.id]?.name}
-                displayImage={VEHICLE_DISPLAY_OVERRIDES[v.id]?.image}
                 expanded={expanded === v.id}
                 onToggle={() => setExpanded(expanded === v.id ? null : v.id)}
                 delay={(i % 3) + 1}
@@ -164,7 +131,6 @@ export function FleetPage() {
               onClick={() => {
                 setCategory("All");
                 setLocation("Any");
-                setMaxPrice(600000);
                 setQuery("");
               }}
               className="eyebrow text-xs text-navy border-b border-navy pb-1 hover:text-gold hover:border-gold transition-colors"
@@ -204,7 +170,7 @@ export function FleetPage() {
           <Feature
             icon={UserRound}
             title="Optional Chauffeur"
-            desc="Add a vetted, Kinyarwanda–English–French speaking driver for RWF 90,000/day. Available on all categories."
+            desc="Add a vetted, Kinyarwanda–English–French speaking driver. Ask us on WhatsApp for availability."
           >
             <li>Background-checked, RSSB-registered professionals</li>
             <li>Up to 12-hour daily window</li>
@@ -215,7 +181,7 @@ export function FleetPage() {
             title="Insurance Coverage"
             desc="Comprehensive cover included on every rental — third-party, collision and theft."
           >
-            <li>RWF 2 billion third-party liability</li>
+            <li>Third-party liability coverage</li>
             <li>Zero deductible on Premium tier</li>
             <li>24/7 roadside assistance across Rwanda</li>
           </Feature>
@@ -243,15 +209,15 @@ export function FleetPage() {
         </div>
       </section>
 
-      {/* Booking CTA — full booking flow lives on /book with MTN MoMo payment */}
+      {/* Booking CTA — rental details are confirmed directly on WhatsApp */}
       <section className="bg-secondary py-24">
         <div className="container-page text-center">
           <h2 className="font-serif text-4xl md:text-5xl text-navy mb-6">
             Found your car? <span className="italic text-gold">Reserve it in minutes.</span>
           </h2>
           <p className="text-muted-foreground max-w-xl mx-auto mb-10">
-            Pick a vehicle, choose your dates, and pay securely with MTN Mobile Money. Free
-            cancellation up to 48 hours before pickup.
+            Pick a vehicle and choose your dates. Our team will confirm availability and all
+            arrangements directly on WhatsApp.
           </p>
           <Link
             to="/book"
@@ -323,11 +289,9 @@ function VehicleCard({
             {car.fuel}
           </span>
         </div>
-        <dl className="grid grid-cols-3 gap-2 mb-5 border-y border-navy/10 py-4">
-          <Price label="Daily" value={displayName ? null : car.daily} />
-          <Price label="Weekly" value={displayName ? null : car.weekly} />
-          <Price label="Monthly" value={displayName ? null : car.monthly} />
-        </dl>
+        <p className="border-y border-navy/10 py-4 mb-5 text-sm text-navy/60">
+          Message us on WhatsApp for availability and a tailored quote.
+        </p>
         <div className="mt-auto flex items-center justify-between">
           <button
             type="button"
@@ -368,10 +332,6 @@ function VehicleCard({
                 ))}
               </ul>
             </div>
-            <p className="text-xs text-navy/60">
-              Security deposit:{" "}
-              <span className="text-navy font-medium">{formatPrice(car.deposit)}</span>
-            </p>
           </div>
         )}
       </div>
@@ -385,17 +345,6 @@ function SpecRow({ icon: Icon, text }: { icon: typeof Users; text: string }) {
       <Icon className="size-4 text-gold" />
       {text}
     </li>
-  );
-}
-
-function Price({ label, value }: { label: string; value: number | null }) {
-  return (
-    <div className="text-center">
-      <dt className="eyebrow text-[10px] text-navy/50 mb-1">{label}</dt>
-      <dd className="font-serif text-lg text-navy">
-        {value === null ? "Talk with us" : formatPrice(value)}
-      </dd>
-    </div>
   );
 }
 
@@ -430,31 +379,31 @@ function Feature({
 const FAQS = [
   {
     q: "What documents do I need to rent?",
-    a: "A valid driving licence held for at least 12 months (Rwandan or an International Driving Permit), plus a passport or national ID and payment for the refundable security deposit.",
+    a: "A valid driving licence held for at least 12 months (Rwandan or an International Driving Permit), plus a passport or national ID. Our team will explain the rental requirements on WhatsApp.",
   },
   {
     q: "Is there a minimum age?",
     a: "Drivers must be 21 or older. Drivers under 25 can rent Economy and Sedan categories with a small young-driver supplement.",
   },
   {
-    q: "What is included in the price?",
-    a: "Comprehensive insurance, 24/7 roadside assistance across Rwanda, and all taxes. Mileage is unlimited on Sedan, Luxury, Van, Bus and Electric categories; Economy and SUV include 200–250 km/day — enough for Kigali and day trips to Musanze or Rubavu.",
+    q: "What is included in the rental?",
+    a: "Comprehensive insurance, 24/7 roadside assistance across Rwanda, and the agreed rental arrangements confirmed with our team on WhatsApp.",
   },
   {
     q: "Can I take the car outside Kigali?",
-    a: "Yes — every vehicle may travel to any district in Rwanda (Musanze, Rubavu, Huye, Nyungwe, Akagera and beyond). Cross-border trips to Uganda, Tanzania or DRC require prior written approval and an additional cross-border fee.",
+    a: "Yes — every vehicle may travel to any district in Rwanda (Musanze, Rubavu, Huye, Nyungwe, Akagera and beyond). Cross-border trips to Uganda, Tanzania or DRC require prior written approval and discussion with our team.",
   },
   {
     q: "Can I add a driver?",
-    a: "Yes — up to two additional drivers can be registered per rental. Each must present a valid licence at pickup; the second additional driver is free. Prefer to be driven? Add a professional chauffeur for RWF 90,000/day.",
+    a: "Yes — up to two additional drivers can be registered per rental. Each must present a valid licence at pickup. Prefer to be driven? Ask us on WhatsApp about a professional chauffeur.",
   },
   {
     q: "What is your cancellation policy?",
     a: "Free cancellation or amendment up to 48 hours before pickup. Within 48 hours, one day's rental is charged.",
   },
   {
-    q: "How do I pay?",
-    a: "We accept MTN Mobile Money, Airtel Money, Visa/Mastercard, bank transfer to our BK account, and cash in RWF at any of our Kigali branches.",
+    q: "How do I get a quote?",
+    a: "Message us on WhatsApp with your vehicle, dates and pickup details. Our team will discuss the rental arrangements with you directly.",
   },
   {
     q: "Do you deliver to Kigali International Airport?",
@@ -462,6 +411,6 @@ const FAQS = [
   },
   {
     q: "Do you offer long-term rentals?",
-    a: "Monthly rates already carry a significant discount, and rentals over three months receive further corporate pricing — popular with NGOs, projects and expatriates based in Kigali. Contact our team for a tailored quote.",
+    a: "Yes. Contact our team on WhatsApp with your dates and requirements for a tailored long-term rental quote.",
   },
 ];

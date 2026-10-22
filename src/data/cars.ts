@@ -19,13 +19,9 @@ export type Car = {
   doors: number;
   bags: number;
   image: string;
-  daily: number;
-  weekly: number;
-  monthly: number;
   features: string[];
   unlimitedMileage: boolean;
   mileageLimitPerDay: number;
-  deposit: number;
   available: boolean;
   featured: boolean;
   location: string;
@@ -41,8 +37,4 @@ export const locations: string[] = [...new Set(cars.map((c) => c.location))];
 
 export function getCarById(id: string): Car | undefined {
   return cars.find((c) => c.id === id);
-}
-
-export function formatPrice(value: number): string {
-  return `RWF ${value.toLocaleString("en-US")}`;
 }

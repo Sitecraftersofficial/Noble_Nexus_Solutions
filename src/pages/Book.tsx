@@ -1,123 +1,104 @@
 /**
- * /book — per-vehicle reservation page.
- * Flow: select vehicle → rental details → price summary → MTN MoMo payment.
- * The MoMo collection (CSTalk-to-Operator) gateway is integrated later; the
- * payment step is wired with a placeholder submit that clearly states MoMo.
+ * /book — collect rental details before continuing the conversation on WhatsApp.
  * Vehicle preselect comes from ?car=<id> when arriving from a fleet card.
  */
-import { useMemo, useState } from "react";
+import { useState } from "react";
 import { Link } from "@/lib/Link";
-import { Check, Smartphone, Gauge, Fuel, Users, Settings2 } from "lucide-react";
+import { Gauge, Fuel, Users, Settings2 } from "lucide-react";
 import { contact } from "@/config/settings";
-import { cars, locations, formatPrice, getCarById, type Car } from "@/data/cars";
-
-type PaymentState = "form" | "processing" | "done";
+import { cars, locations, getCarById, type Car } from "@/data/cars";
 
 function readCarParam(): string | undefined {
-  const param = new URLSearchParams(window.location.search).get("car");
-  return param ?? undefined;
+  return new URLSearchParams(window.location.search).get("car") ?? undefined;
 }
 
 export function BookPage() {
-  const [carId, setCarId] = useState<string>(getCarById(readCarParam() ?? "")?.id ?? "");
+  const [carId, setCarId] = useState(getCarById(readCarParam() ?? "")?.id ?? "");
   const car = getCarById(carId);
-
+  const [sent, setSent] = useState(false);
   const [pickupDate, setPickupDate] = useState("");
   const [returnDate, setReturnDate] = useState("");
-  const [pickupLocation, setPickupLocation] = useState<string>("");
+  const [pickupLocation, setPickupLocation] = useState("");
   const [driverOption, setDriverOption] = useState<"self" | "chauffeur">("self");
   const [notes, setNotes] = useState("");
-  const [payment, setPayment] = useState<PaymentState>("form");
-
-  const CHAUFFEUR_DAILY = 90000;
-
-  /** Estimate = days × (car rate + optional chauffeur). Uses daily rate. */
-  const estimate = useMemo(() => {
-    if (!car || !pickupDate || !returnDate) return null;
-    const days = Math.max(
-      1,
-      Math.round((new Date(returnDate).getTime() - new Date(pickupDate).getTime()) / 86_400_000),
-    );
-    if (Number.isNaN(days)) return null;
-    return {
-      days,
-      car: car.daily * days,
-      chauffeur: driverOption === "chauffeur" ? CHAUFFEUR_DAILY * days : 0,
-      deposit: car.deposit,
-      total: car.daily * days + (driverOption === "chauffeur" ? CHAUFFEUR_DAILY * days : 0),
-    };
-  }, [car, pickupDate, returnDate, driverOption]);
 
   function onSubmit(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault();
-    setPayment("processing");
-    // TODO: MTN MoMo Collections API — create payment request with the
-    // renter's MoMo number, then confirm callback before marking "done".
-    window.setTimeout(() => setPayment("done"), 1800);
+    const message = [
+      "Hello Noble Nexus, I would like to enquire about a rental.",
+      car ? `Vehicle: ${car.name}` : "",
+      `Dates: ${pickupDate} to ${returnDate}`,
+      `Pickup: ${pickupLocation}`,
+      `Driver: ${driverOption === "chauffeur" ? "With chauffeur" : "Self-drive"}`,
+      notes ? `Notes: ${notes}` : "",
+    ]
+      .filter(Boolean)
+      .join("\n");
+    window.open(
+      `https://wa.me/${contact.whatsapp.replace(/\D/g, "")}?text=${encodeURIComponent(message)}`,
+      "_blank",
+      "noopener,noreferrer",
+    );
+    setSent(true);
   }
 
   return (
     <>
-      {/* Hero */}
       <section className="bg-navy text-cream py-24 relative overflow-hidden">
-        <div
-          className="absolute top-8 right-12 w-48 h-48 rounded-full bg-gold/10 blur-3xl nx-float"
-          aria-hidden
-        />
         <div className="container-page max-w-3xl vg-reveal relative">
           <p className="eyebrow text-gold mb-6">Reservations</p>
           <h1 className="font-serif text-5xl md:text-6xl leading-[1.05] mb-6">
-            Book your vehicle. <span className="italic text-gold">Pay with MoMo.</span>
+            Start your rental <span className="italic text-gold">conversation.</span>
           </h1>
           <p className="text-cream/70 text-lg max-w-xl">
-            Reserve in minutes — confirm the details, see the price, then pay securely with MTN
-            Mobile Money from your phone.
+            Share your vehicle and trip details. Our team will discuss availability and all rental
+            arrangements with you directly on WhatsApp.
           </p>
         </div>
       </section>
 
       <section className="container-page py-16">
-        {payment === "done" ? (
-          <Confirmation car={car ?? null} estimate={estimate} />
+        {sent ? (
+          <div className="max-w-2xl mx-auto border border-gold bg-secondary p-10 text-center">
+            <p className="eyebrow text-gold mb-4">WhatsApp opened</p>
+            <h2 className="font-serif text-4xl text-navy mb-4">We’ll take it from here.</h2>
+            <p className="text-navy/70 mb-8">
+              Send the prepared message in WhatsApp to continue your rental enquiry.
+            </p>
+            <Link
+              to="/car-rental"
+              className="bg-navy text-cream px-8 py-3 eyebrow hover:bg-gold hover:text-navy transition-colors"
+            >
+              Browse More Vehicles
+            </Link>
+          </div>
         ) : (
           <form onSubmit={onSubmit} className="grid lg:grid-cols-3 gap-10">
-            {/* Left: steps */}
             <div className="lg:col-span-2 space-y-10">
-              {/* 1 — Vehicle */}
-              <Step n="1" title="Choose your vehicle" delay={1}>
+              <Step n="1" title="Choose your vehicle">
                 {car ? (
                   <SelectedCarCard car={car} onChange={() => setCarId("")} />
                 ) : (
-                  <div className="grid sm:grid-cols-2 gap-4">
-                    <label className="block sm:col-span-2">
-                      <span className="block eyebrow text-xs text-navy mb-2">Vehicle</span>
-                      <select
-                        required
-                        value={carId}
-                        onChange={(e) => setCarId(e.target.value)}
-                        className="w-full border border-navy/20 bg-background p-3 text-sm"
-                      >
-                        <option value="">— Select a vehicle —</option>
-                        {cars.map((c) => (
-                          <option key={c.id} value={c.id}>
-                            {c.name} — {formatPrice(c.daily)}/day
-                          </option>
-                        ))}
-                      </select>
-                    </label>
-                    <p className="sm:col-span-2 text-sm text-navy/60">
-                      Or browse the{" "}
-                      <Link to="/car-rental" className="text-gold hover:underline">
-                        full fleet
-                      </Link>{" "}
-                      and press “Reserve” on any vehicle.
-                    </p>
-                  </div>
+                  <label className="block">
+                    <span className="block eyebrow text-xs text-navy mb-2">Vehicle</span>
+                    <select
+                      required
+                      value={carId}
+                      onChange={(e) => setCarId(e.target.value)}
+                      className="w-full border border-navy/20 bg-background p-3 text-sm"
+                    >
+                      <option value="">— Select a vehicle —</option>
+                      {cars.map((c) => (
+                        <option key={c.id} value={c.id}>
+                          {c.name}
+                        </option>
+                      ))}
+                    </select>
+                  </label>
                 )}
               </Step>
 
-              {/* 2 — Rental details */}
-              <Step n="2" title="Rental details" delay={2}>
+              <Step n="2" title="Rental details">
                 <div className="grid sm:grid-cols-2 gap-6">
                   <Field
                     label="Pickup date"
@@ -125,7 +106,6 @@ export function BookPage() {
                     required
                     value={pickupDate}
                     onChange={setPickupDate}
-                    min={new Date().toISOString().slice(0, 10)}
                   />
                   <Field
                     label="Return date"
@@ -133,7 +113,7 @@ export function BookPage() {
                     required
                     value={returnDate}
                     onChange={setReturnDate}
-                    min={pickupDate || new Date().toISOString().slice(0, 10)}
+                    min={pickupDate}
                   />
                   <label className="block">
                     <span className="block eyebrow text-xs text-navy mb-2">Pickup location</span>
@@ -144,8 +124,8 @@ export function BookPage() {
                       className="w-full border border-navy/20 bg-background p-3 text-sm"
                     >
                       <option value="">— Select location —</option>
-                      {locations.map((l) => (
-                        <option key={l}>{l}</option>
+                      {locations.map((location) => (
+                        <option key={location}>{location}</option>
                       ))}
                       <option>Kigali International Airport (KIA)</option>
                       <option>My hotel / residence in Kigali</option>
@@ -159,107 +139,54 @@ export function BookPage() {
                       className="w-full border border-navy/20 bg-background p-3 text-sm"
                     >
                       <option value="self">Self-drive</option>
-                      <option value="chauffeur">
-                        With chauffeur (+{formatPrice(CHAUFFEUR_DAILY)}/day)
-                      </option>
+                      <option value="chauffeur">With chauffeur</option>
                     </select>
                   </label>
-                  <div className="sm:col-span-2">
-                    <label className="block eyebrow text-xs text-navy mb-2">Notes (optional)</label>
+                  <label className="block sm:col-span-2">
+                    <span className="block eyebrow text-xs text-navy mb-2">Notes (optional)</span>
                     <textarea
                       rows={3}
                       value={notes}
                       onChange={(e) => setNotes(e.target.value)}
-                      placeholder="e.g. Gorilla trekking in Musanze for 3 days, then drop-off at KIA."
+                      placeholder="Tell us about your trip or any requirements."
                       className="w-full border border-navy/20 bg-background p-3 text-sm"
                     />
-                  </div>
+                  </label>
                 </div>
               </Step>
 
-              {/* 3 — Renter details */}
-              <Step n="3" title="Your details" delay={3}>
+              <Step n="3" title="Your details">
                 <div className="grid sm:grid-cols-2 gap-6">
                   <Field label="Full name" type="text" required />
                   <Field label="Email" type="email" required />
                   <Field label="Phone" type="tel" required placeholder="+250 7…" />
-                  <Field
-                    label="MTN MoMo number (for payment)"
-                    type="tel"
-                    required
-                    placeholder="078… / 079…"
-                    hint="You'll receive a MoMo prompt on this number to approve the payment."
-                  />
                   <label className="sm:col-span-2 flex items-start gap-3 text-sm text-navy/70">
                     <input type="checkbox" required className="mt-1 accent-[#0A1F44]" />
                     <span>
-                      I have a valid driving licence (held 12+ months) and accept the{" "}
+                      I have a valid driving licence and accept the{" "}
                       <Link to="/about" className="text-gold hover:underline">
                         rental terms
                       </Link>
-                      : free cancellation up to 48h before pickup.
+                      .
                     </span>
                   </label>
                 </div>
               </Step>
             </div>
 
-            {/* Right: price summary + payment */}
             <aside className="lg:col-span-1">
               <div className="sticky top-24 bg-cream border border-navy/10 p-8">
-                <h3 className="font-serif text-2xl text-navy mb-6">Price summary</h3>
-                {estimate && car ? (
-                  <div className="space-y-3 text-sm">
-                    <Row
-                      label={`${car.name} × ${estimate.days} day${estimate.days === 1 ? "" : "s"}`}
-                      value={formatPrice(estimate.car)}
-                    />
-                    {estimate.chauffeur > 0 && (
-                      <Row
-                        label={`Chauffeur × ${estimate.days} day${estimate.days === 1 ? "" : "s"}`}
-                        value={formatPrice(estimate.chauffeur)}
-                      />
-                    )}
-                    <Row label="Insurance & roadside cover" value="Included" muted />
-                    <div className="border-t border-navy/10 pt-3 flex justify-between">
-                      <span className="eyebrow text-navy">Rental total</span>
-                      <span className="font-serif text-xl text-navy">
-                        {formatPrice(estimate.total)}
-                      </span>
-                    </div>
-                    <div className="flex justify-between text-navy/60">
-                      <span>Refundable deposit (pay at pickup)</span>
-                      <span>{formatPrice(estimate.deposit)}</span>
-                    </div>
-                  </div>
-                ) : (
-                  <p className="text-sm text-navy/50 mb-6">
-                    Select a vehicle and dates to see your price.
-                  </p>
-                )}
-
-                <div className="mt-8 border-t border-navy/10 pt-6">
-                  <div className="flex items-center gap-3 mb-3">
-                    <Smartphone className="size-5 text-gold" />
-                    <span className="eyebrow text-navy">Pay with MTN MoMo</span>
-                  </div>
-                  <p className="text-xs text-navy/60 leading-relaxed mb-5">
-                    On submit you'll get an MTN prompt on your phone to approve the rental payment.
-                    Card, Airtel Money and bank transfer are accepted at the branch.
-                  </p>
-                  <button
-                    type="submit"
-                    disabled={!estimate || payment === "processing"}
-                    className="w-full bg-navy text-cream py-4 eyebrow hover:bg-gold hover:text-navy transition-colors disabled:opacity-40 disabled:cursor-not-allowed"
-                  >
-                    {payment === "processing"
-                      ? "Waiting for MoMo approval…"
-                      : "Pay & Confirm Booking"}
-                  </button>
-                  <p className="mt-4 text-[11px] text-navy/40 text-center">
-                    Secured by MTN Mobile Money · Free cancellation up to 48h
-                  </p>
-                </div>
+                <h3 className="font-serif text-2xl text-navy mb-4">Continue on WhatsApp</h3>
+                <p className="text-sm text-navy/60 leading-relaxed mb-6">
+                  No financial details are collected here. Our team will discuss the quote and
+                  rental arrangements with you directly on WhatsApp.
+                </p>
+                <button
+                  type="submit"
+                  className="w-full bg-navy text-cream py-4 eyebrow hover:bg-gold hover:text-navy transition-colors"
+                >
+                  Message us on WhatsApp
+                </button>
               </div>
             </aside>
           </form>
@@ -269,21 +196,9 @@ export function BookPage() {
   );
 }
 
-/* ─── Local components ─── */
-
-function Step({
-  n,
-  title,
-  children,
-  delay = 1,
-}: {
-  n: string;
-  title: string;
-  children: React.ReactNode;
-  delay?: number;
-}) {
+function Step({ n, title, children }: { n: string; title: string; children: React.ReactNode }) {
   return (
-    <div className={`nx-reveal nx-delay-${delay} border border-navy/10 bg-secondary/50 p-8`}>
+    <div className="border border-navy/10 bg-secondary/50 p-8">
       <div className="flex items-center gap-4 mb-6">
         <span className="w-9 h-9 bg-navy text-gold eyebrow flex items-center justify-center">
           {n}
@@ -308,7 +223,7 @@ function SelectedCarCard({ car, onChange }: { car: Car; onChange: () => void }) 
           {car.category} · {car.year} · {car.location}
         </p>
         <h3 className="font-serif text-xl text-navy mb-2">{car.name}</h3>
-        <div className="flex flex-wrap gap-3 text-xs text-navy/60 mb-2">
+        <div className="flex flex-wrap gap-3 text-xs text-navy/60">
           <span className="flex items-center gap-1">
             <Users className="size-3.5 text-gold" />
             {car.seats} seats
@@ -326,10 +241,6 @@ function SelectedCarCard({ car, onChange }: { car: Car; onChange: () => void }) 
             {car.unlimitedMileage ? "Unlimited km" : `${car.mileageLimitPerDay} km/day`}
           </span>
         </div>
-        <p className="font-serif text-lg text-navy">
-          {formatPrice(car.daily)}
-          <span className="text-sm text-navy/50"> /day</span>
-        </p>
         <button
           type="button"
           onClick={onChange}
@@ -337,61 +248,6 @@ function SelectedCarCard({ car, onChange }: { car: Car; onChange: () => void }) 
         >
           Change vehicle
         </button>
-      </div>
-    </div>
-  );
-}
-
-function Row({ label, value, muted }: { label: string; value: string; muted?: boolean }) {
-  return (
-    <div className="flex justify-between gap-4">
-      <span className={muted ? "text-navy/50" : "text-navy/70"}>{label}</span>
-      <span className={muted ? "text-navy/50" : "text-navy"}>{value}</span>
-    </div>
-  );
-}
-
-type Estimate = null | { days: number; total: number };
-
-function Confirmation({ car, estimate }: { car: Car | null; estimate: Estimate }) {
-  return (
-    <div className="max-w-2xl mx-auto border border-gold bg-secondary p-10 text-center">
-      <div className="w-14 h-14 rounded-full bg-gold flex items-center justify-center mx-auto mb-6">
-        <Check className="size-7 text-navy" />
-      </div>
-      <p className="eyebrow text-gold mb-4">Booking received</p>
-      <h2 className="font-serif text-4xl text-navy mb-4">Murakoze — you're booked.</h2>
-      <p className="text-navy/70 mb-2">
-        Your MoMo payment was approved and your reservation is confirmed.
-      </p>
-      {car && (
-        <p className="text-navy mb-6">
-          <span className="font-serif text-xl text-navy">{car.name}</span>
-          {estimate && (
-            <>
-              {" "}
-              · {estimate.days} day{estimate.days === 1 ? "" : "s"} · {formatPrice(estimate.total)}
-            </>
-          )}
-        </p>
-      )}
-      <div className="text-sm text-navy/60 space-y-1 mb-8">
-        <p>A confirmation has been sent to your email and phone.</p>
-        <p>Pickup: bring your licence and ID — the refundable deposit is settled at the branch.</p>
-      </div>
-      <div className="flex flex-wrap justify-center gap-4">
-        <Link
-          to="/car-rental"
-          className="bg-navy text-cream px-8 py-3 eyebrow hover:bg-gold hover:text-navy transition-colors"
-        >
-          Browse More Vehicles
-        </Link>
-        <a
-          href={`tel:${contact.phone.replace(/\s/g, "")}`}
-          className="border border-navy text-navy px-8 py-3 eyebrow hover:bg-navy hover:text-cream transition-colors"
-        >
-          Call {contact.phone}
-        </a>
       </div>
     </div>
   );
@@ -405,16 +261,14 @@ function Field({
   onChange,
   min,
   placeholder,
-  hint,
 }: {
   label: string;
   type: string;
   required?: boolean;
   value?: string;
-  onChange?: (v: string) => void;
+  onChange?: (value: string) => void;
   min?: string;
   placeholder?: string;
-  hint?: string;
 }) {
   return (
     <label className="block">
@@ -428,7 +282,6 @@ function Field({
         placeholder={placeholder}
         className="w-full border border-navy/20 bg-background p-3 text-sm"
       />
-      {hint && <span className="block text-[11px] text-navy/50 mt-1">{hint}</span>}
     </label>
   );
 }
