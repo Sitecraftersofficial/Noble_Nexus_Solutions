@@ -45,8 +45,8 @@ export function HomePage() {
             Your journey. <span className="italic text-gold">Our wheels.</span>
           </h1>
           <p className="text-cream/70 max-w-xl text-lg font-light leading-relaxed mb-10 text-pretty">
-            {site.tagline} Economy to luxury, self-drive or chauffeured — from Kigali International
-            Airport to Musanze, Rubavu and beyond.
+            {site.tagline} Economy to luxury, self-drive or chauffeured — with arrangements tailored
+            to your journey.
           </p>
           <div className="flex flex-col sm:flex-row gap-4">
             <Link
@@ -67,10 +67,23 @@ export function HomePage() {
 
       {/* 2. Trust bar */}
       <section className="bg-navy py-16 overflow-hidden">
-        <div className="container-page border-y border-gold/20 py-10 grid grid-cols-2 md:grid-cols-4 gap-10">
+        <div className="container-page border-y border-gold/20 py-10 grid grid-cols-2 md:grid-cols-3 gap-10">
           {stats.map((s, i) => (
-            <div key={s.label} className={`nx-reveal nx-delay-${i + 1} text-center md:text-left`}>
-              <p className="text-gold text-4xl md:text-5xl font-serif mb-2">{s.value}</p>
+            <div
+              key={s.label}
+              className={`nx-reveal nx-delay-${i + 1} text-center ${
+                i === stats.length - 1 ? "col-span-2 md:col-span-1 justify-self-center" : ""
+              }`}
+            >
+              <p className="text-gold text-4xl md:text-5xl font-serif mb-2 flex items-baseline justify-center gap-1">
+                {s.value === "5★" ? (
+                  <>
+                    5<span className="text-2xl md:text-3xl">★</span>
+                  </>
+                ) : (
+                  s.value
+                )}
+              </p>
               <p className="text-cream/40 eyebrow">{s.label}</p>
             </div>
           ))}
@@ -83,7 +96,7 @@ export function HomePage() {
           <div>
             <p className="eyebrow text-gold mb-4">Featured Fleet</p>
             <h2 className="font-serif text-4xl md:text-5xl text-navy leading-tight">
-              Seven categories. <span className="italic">Personal service.</span>
+              Find your perfect ride. <span className="italic">Enjoy personal service.</span>
             </h2>
           </div>
           <Link
@@ -163,12 +176,12 @@ export function HomePage() {
             {
               n: "02",
               title: "Reserve online",
-              text: "Pick your dates, branch or KIA delivery, and driver option. Our team confirms availability and details on WhatsApp.",
+              text: "Pick your dates and driver option. Our team confirms availability and arrangements on WhatsApp.",
             },
             {
               n: "03",
-              title: "Collect & drive",
-              text: "We hand over the keys at our KG 7 Ave branch, your hotel, or free meet-and-greet at Kigali International Airport — or deliver to your door.",
+              title: "Get on the road",
+              text: "We confirm the arrangements with you, then hand over the keys for your journey.",
             },
           ].map((step, i) => (
             <div key={step.n} className={`nx-reveal nx-delay-${i + 1} bg-background p-10 nx-lift`}>
@@ -245,7 +258,7 @@ const TESTIMONIALS = [
     name: "Marcus L.",
     role: "NGO Program Director",
     quote:
-      "Our project rents monthly now. Immaculate cars, KIA delivery, and roadside support that actually answers on the Muhanga road.",
+      "Our project rents monthly now. Immaculate cars and roadside support that actually answers on the Muhanga road.",
   },
   {
     name: "Aanya P.",

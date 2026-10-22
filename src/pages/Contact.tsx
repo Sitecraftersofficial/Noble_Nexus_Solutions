@@ -110,16 +110,6 @@ export function ContactPage() {
         {/* Details */}
         <aside className="md:col-span-2 space-y-10">
           <div>
-            <p className="eyebrow text-gold mb-4">Main Office</p>
-            <address className="not-italic text-navy/80 leading-relaxed">
-              {contact.address.line1}
-              <br />
-              {contact.address.line2}
-              <br />
-              {contact.address.country}
-            </address>
-          </div>
-          <div>
             <p className="eyebrow text-gold mb-4">Direct</p>
             <p className="text-navy/80">
               <a className="hover:text-gold transition-colors" href={`mailto:${contact.email}`}>
@@ -147,14 +137,6 @@ export function ContactPage() {
             <p className="text-navy/60 text-sm mt-2">
               Quotes and rental arrangements are handled directly on WhatsApp.
             </p>
-          </div>
-          <div>
-            <p className="eyebrow text-gold mb-4">Branches & Pickup Points</p>
-            <ul className="text-navy/80 space-y-1">
-              {contact.offices.map((o) => (
-                <li key={o}>{o}</li>
-              ))}
-            </ul>
           </div>
         </aside>
       </section>

@@ -20,7 +20,7 @@ export const site = {
   tagline: "Premium car rentals for every journey.",
   /** Long description for meta tags */
   description:
-    "Noble Nexus Car Rentals — Rwanda's premium car rental. Kigali airport delivery, self-drive or chauffeured, from economy to luxury.",
+    "Noble Nexus Car Rentals — Rwanda's premium car rental. Self-drive or chauffeured, from economy to luxury.",
   /** Founded year (for footer copyright) */
   foundedYear: 1984,
 } as const;
@@ -41,13 +41,6 @@ export const contact = {
   phone: "+250 788 000 000",
   whatsapp: "+250 788 000 000",
   email: "rentals@noblenexus.rw",
-  address: {
-    line1: "KG 7 Ave, Kiyovu",
-    line2: "Nyarugenge District",
-    country: "Kigali, Rwanda",
-  },
-  /** Branch / pickup locations shown in footer / contact page */
-  offices: ["Kigali — KG 7 Ave", "Kigali — Remera", "Kigali — Nyarutarama", "Rubavu — Lake Kivu"],
 } as const;
 
 export const social = {
@@ -74,10 +67,9 @@ export const quickAccess = [
 
 /** Headline statistics on the home Trust Bar — edit values here */
 export const stats = [
-  { value: "120+", label: "Vehicles in Fleet" },
   { value: "30", label: "Districts Served" },
   { value: "24/7", label: "Roadside Assistance" },
-  { value: "98%", label: "Five-Star Reviews" },
+  { value: "5★", label: "Reviews" },
 ];
 
 /** Rental policy highlights shown on home + fleet pages */
@@ -95,11 +87,11 @@ export const policies = [
   {
     icon: "CalendarCheck",
     title: "Free Cancellation",
-    text: "Cancel or amend free of charge up to 48 hours before pickup.",
+    text: "Cancel or amend free of charge up to 48 hours before your rental begins.",
   },
   {
     icon: "MapPin",
-    title: "Airport Delivery",
-    text: "Free meet-and-greet delivery at Kigali International Airport and city hotels.",
+    title: "Personal Arrangements",
+    text: "Our team will confirm the arrangements for your rental.",
   },
 ] as const;

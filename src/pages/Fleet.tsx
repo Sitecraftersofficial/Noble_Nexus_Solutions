@@ -1,6 +1,6 @@
 /**
  * Car Rental — fleet browsing with filters, per-car detail, policies,
- * FAQ, and booking form. All vehicle data comes from src/data/cars.json.
+ * and booking form. All vehicle data comes from src/data/cars.json.
  */
 import { useMemo, useState } from "react";
 import { Link } from "@/lib/Link";
@@ -14,30 +14,27 @@ import {
   Gauge,
   Settings2,
   Fuel,
-  ChevronDown,
   MapPin as MapPinIcon,
 } from "lucide-react";
 const heroImg = "/images/cars/toyotaLcPrado-2.jpg";
 import { policies } from "@/config/settings";
-import { cars, categories, locations, type Car, type CarCategory } from "@/data/cars";
+import { cars, categories, type Car, type CarCategory } from "@/data/cars";
 import { Tilt } from "@/lib/nx-motion";
 
 const CATEGORIES: Array<CarCategory | "All"> = ["All", ...categories];
 export function FleetPage() {
   const [category, setCategory] = useState<CarCategory | "All">("All");
-  const [location, setLocation] = useState<string>("Any");
   const [query, setQuery] = useState("");
   const [expanded, setExpanded] = useState<string | null>(null);
 
   const filtered = useMemo(() => {
     return cars.filter((c) => {
       if (category !== "All" && c.category !== category) return false;
-      if (location !== "Any" && c.location !== location) return false;
       if (query && !`${c.name} ${c.make} ${c.model}`.toLowerCase().includes(query.toLowerCase()))
         return false;
       return true;
     });
-  }, [category, location, query]);
+  }, [category, query]);
   // Temporary display limit; remove the slice to show all vehicles matching the filters.
   const visibleVehicles = filtered.slice(0, 3);
 
@@ -91,19 +88,6 @@ export function FleetPage() {
               ))}
             </select>
           </label>
-          <label className="block">
-            <span className="block eyebrow text-xs text-navy mb-2">Pickup Location</span>
-            <select
-              value={location}
-              onChange={(e) => setLocation(e.target.value)}
-              className="w-full border border-navy/20 bg-background p-3 text-sm"
-            >
-              <option>Any</option>
-              {locations.map((l) => (
-                <option key={l}>{l}</option>
-              ))}
-            </select>
-          </label>
         </div>
         <p className="eyebrow text-xs text-navy/50 mb-8">
           Showing {visibleVehicles.length} of {filtered.length} matching vehicles ({cars.length} in
@@ -130,7 +114,6 @@ export function FleetPage() {
               type="button"
               onClick={() => {
                 setCategory("All");
-                setLocation("Any");
                 setQuery("");
               }}
               className="eyebrow text-xs text-navy border-b border-navy pb-1 hover:text-gold hover:border-gold transition-colors"
@@ -172,40 +155,17 @@ export function FleetPage() {
             title="Optional Chauffeur"
             desc="Add a vetted, Kinyarwanda–English–French speaking driver. Ask us on WhatsApp for availability."
           >
-            <li>Background-checked, RSSB-registered professionals</li>
+            <li>Background-checked professional drivers</li>
             <li>Up to 12-hour daily window</li>
             <li>Overnight accommodation on long journeys (e.g. Rubavu, Nyungwe)</li>
           </Feature>
           <Feature
             icon={ShieldCheck}
             title="Insurance Coverage"
-            desc="Comprehensive cover included on every rental — third-party, collision and theft."
+            desc="Every rental is insured. Contact our team for details."
           >
-            <li>Third-party liability coverage</li>
-            <li>Zero deductible on Premium tier</li>
-            <li>24/7 roadside assistance across Rwanda</li>
+            <li>Insurance included with every rental</li>
           </Feature>
-        </div>
-      </section>
-
-      {/* FAQ */}
-      <section className="bg-secondary py-24">
-        <div className="container-page max-w-3xl">
-          <p className="eyebrow text-gold mb-4 text-center">FAQ</p>
-          <h2 className="font-serif text-4xl md:text-5xl text-navy text-center mb-12">
-            Rental questions, answered.
-          </h2>
-          <div className="divide-y divide-navy/10 border-y border-navy/10">
-            {FAQS.map((f) => (
-              <details key={f.q} className="group py-6">
-                <summary className="flex items-center justify-between cursor-pointer list-none">
-                  <span className="font-serif text-xl text-navy pr-4">{f.q}</span>
-                  <ChevronDown className="size-5 text-gold shrink-0 transition-transform group-open:rotate-180" />
-                </summary>
-                <p className="text-navy/60 text-sm leading-relaxed mt-4 max-w-2xl">{f.a}</p>
-              </details>
-            ))}
-          </div>
         </div>
       </section>
 
@@ -272,7 +232,7 @@ function VehicleCard({
       </div>
       <div className="p-6 flex flex-col flex-1">
         <p className="eyebrow text-gold text-xs mb-2">
-          {car.category} · {car.year} · {car.location}
+          {car.category} · {car.year}
         </p>
         <h3 className="font-serif text-2xl text-navy mb-4">{displayName ?? car.name}</h3>
         <div className="flex gap-4 text-xs text-navy/60 mb-5">
@@ -375,42 +335,3 @@ function Feature({
     </div>
   );
 }
-
-const FAQS = [
-  {
-    q: "What documents do I need to rent?",
-    a: "A valid driving licence held for at least 12 months (Rwandan or an International Driving Permit), plus a passport or national ID. Our team will explain the rental requirements on WhatsApp.",
-  },
-  {
-    q: "Is there a minimum age?",
-    a: "Drivers must be 21 or older. Drivers under 25 can rent Economy and Sedan categories with a small young-driver supplement.",
-  },
-  {
-    q: "What is included in the rental?",
-    a: "Comprehensive insurance, 24/7 roadside assistance across Rwanda, and the agreed rental arrangements confirmed with our team on WhatsApp.",
-  },
-  {
-    q: "Can I take the car outside Kigali?",
-    a: "Yes — every vehicle may travel to any district in Rwanda (Musanze, Rubavu, Huye, Nyungwe, Akagera and beyond). Cross-border trips to Uganda, Tanzania or DRC require prior written approval and discussion with our team.",
-  },
-  {
-    q: "Can I add a driver?",
-    a: "Yes — up to two additional drivers can be registered per rental. Each must present a valid licence at pickup. Prefer to be driven? Ask us on WhatsApp about a professional chauffeur.",
-  },
-  {
-    q: "What is your cancellation policy?",
-    a: "Free cancellation or amendment up to 48 hours before pickup. Within 48 hours, one day's rental is charged.",
-  },
-  {
-    q: "How do I get a quote?",
-    a: "Message us on WhatsApp with your vehicle, dates and pickup details. Our team will discuss the rental arrangements with you directly.",
-  },
-  {
-    q: "Do you deliver to Kigali International Airport?",
-    a: "Yes. Free meet-and-greet at KIA arrivals for every booking — your car waits curbside with the keys, regardless of flight delays.",
-  },
-  {
-    q: "Do you offer long-term rentals?",
-    a: "Yes. Contact our team on WhatsApp with your dates and requirements for a tailored long-term rental quote.",
-  },
-];

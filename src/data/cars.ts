@@ -24,7 +24,6 @@ export type Car = {
   mileageLimitPerDay: number;
   available: boolean;
   featured: boolean;
-  location: string;
   description: string;
 };
 
@@ -32,8 +31,6 @@ export type Car = {
 export const cars = rawCars as Car[] satisfies Car[];
 
 export const categories: CarCategory[] = [...new Set(cars.map((c) => c.category))];
-
-export const locations: string[] = [...new Set(cars.map((c) => c.location))];
 
 export function getCarById(id: string): Car | undefined {
   return cars.find((c) => c.id === id);

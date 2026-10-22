@@ -17,7 +17,6 @@
     "mileageLimitPerDay": 300,
     "available": true,
     "featured": true,
-    "location": "Kigali — KG 7 Ave",
     "description": "A quiet, modern electric SUV for comfortable city travel and longer journeys around Rwanda."
   },
   {
@@ -38,7 +37,6 @@
     "mileageLimitPerDay": 0,
     "available": true,
     "featured": true,
-    "location": "Kigali — Nyarutarama",
     "description": "A capable seven-seat SUV built for city driving, safari routes and Rwanda's varied terrain."
   },
   {
@@ -59,7 +57,6 @@
     "mileageLimitPerDay": 0,
     "available": true,
     "featured": true,
-    "location": "Kigali — Nyarutarama",
     "description": "A capable seven-seat SUV built for city driving, safari routes and Rwanda's varied terrain."
   }
 ]

@@ -6,7 +6,7 @@ import { useState } from "react";
 import { Link } from "@/lib/Link";
 import { Gauge, Fuel, Users, Settings2 } from "lucide-react";
 import { contact } from "@/config/settings";
-import { cars, locations, getCarById, type Car } from "@/data/cars";
+import { cars, getCarById, type Car } from "@/data/cars";
 
 function readCarParam(): string | undefined {
   return new URLSearchParams(window.location.search).get("car") ?? undefined;
@@ -18,7 +18,6 @@ export function BookPage() {
   const [sent, setSent] = useState(false);
   const [pickupDate, setPickupDate] = useState("");
   const [returnDate, setReturnDate] = useState("");
-  const [pickupLocation, setPickupLocation] = useState("");
   const [driverOption, setDriverOption] = useState<"self" | "chauffeur">("self");
   const [notes, setNotes] = useState("");
 
@@ -28,7 +27,6 @@ export function BookPage() {
       "Hello Noble Nexus, I would like to enquire about a rental.",
       car ? `Vehicle: ${car.name}` : "",
       `Dates: ${pickupDate} to ${returnDate}`,
-      `Pickup: ${pickupLocation}`,
       `Driver: ${driverOption === "chauffeur" ? "With chauffeur" : "Self-drive"}`,
       notes ? `Notes: ${notes}` : "",
     ]
@@ -115,22 +113,6 @@ export function BookPage() {
                     onChange={setReturnDate}
                     min={pickupDate}
                   />
-                  <label className="block">
-                    <span className="block eyebrow text-xs text-navy mb-2">Pickup location</span>
-                    <select
-                      required
-                      value={pickupLocation}
-                      onChange={(e) => setPickupLocation(e.target.value)}
-                      className="w-full border border-navy/20 bg-background p-3 text-sm"
-                    >
-                      <option value="">— Select location —</option>
-                      {locations.map((location) => (
-                        <option key={location}>{location}</option>
-                      ))}
-                      <option>Kigali International Airport (KIA)</option>
-                      <option>My hotel / residence in Kigali</option>
-                    </select>
-                  </label>
                   <label className="block">
                     <span className="block eyebrow text-xs text-navy mb-2">Driver option</span>
                     <select
@@ -220,7 +202,7 @@ function SelectedCarCard({ car, onChange }: { car: Car; onChange: () => void }) 
       />
       <div className="flex-1">
         <p className="eyebrow text-gold text-xs mb-1">
-          {car.category} · {car.year} · {car.location}
+          {car.category} · {car.year}
         </p>
         <h3 className="font-serif text-xl text-navy mb-2">{car.name}</h3>
         <div className="flex flex-wrap gap-3 text-xs text-navy/60">

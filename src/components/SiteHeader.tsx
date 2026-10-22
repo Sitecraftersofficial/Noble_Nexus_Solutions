@@ -44,14 +44,16 @@ export function SiteHeader({ path }: { path: string }) {
     <header className="sticky top-0 z-50 w-full bg-navy text-cream border-b border-gold/20">
       <div className="container-page flex items-center justify-between h-20">
         <Link to="/" className="flex items-center gap-3" aria-label={`${site.name} home`}>
-          <span
-            className="w-8 h-8 border border-gold flex items-center justify-center font-serif italic text-gold text-lg"
-            aria-hidden
-          >
-            N
-          </span>
-          <span className="font-serif text-sm md:text-base tracking-[0.2em] uppercase leading-tight max-w-[16rem]">
-            {site.name}
+          <img
+            src="/images/logo.jpeg"
+            alt="Noble Nexus Transportation Services logo"
+            className="h-20 w-20 shrink-0 object-contain mix-blend-screen"
+          />
+          <span className="flex flex-col leading-tight">
+            <span className="font-serif text-sm md:text-base tracking-[0.2em] uppercase">
+              NOBLE NEXUS SOLUTIONS
+            </span>
+            <span className="text-[9px] tracking-[0.28em] text-gold uppercase">Car Rental</span>
           </span>
         </Link>
 
