@@ -42,12 +42,12 @@ export function SiteHeader({ path }: { path: string }) {
 
   return (
     <header className="sticky top-0 z-50 w-full bg-navy text-cream border-b border-gold/20">
-      <div className="container-page flex items-center justify-between h-20">
+      <div className="container-page flex items-center justify-between h-24">
         <Link to="/" className="flex items-center gap-3" aria-label={`${site.name} home`}>
           <img
             src="/images/logo.jpeg"
             alt="Noble Nexus Transportation Services logo"
-            className="h-20 w-20 shrink-0 object-contain mix-blend-screen"
+            className="h-24 w-24 shrink-0 object-contain mix-blend-screen"
           />
           <span className="flex flex-col leading-tight">
             <span className="font-serif text-sm md:text-base tracking-[0.2em] uppercase">

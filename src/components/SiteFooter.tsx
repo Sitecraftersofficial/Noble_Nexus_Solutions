@@ -16,7 +16,7 @@ export function SiteFooter() {
             <img
               src="/images/logo.jpeg"
               alt="Noble Nexus Transportation Services logo"
-              className="h-24 w-24 shrink-0 object-contain mix-blend-screen"
+              className="h-32 w-32 shrink-0 object-contain mix-blend-screen"
             />
             <span className="flex flex-col leading-tight">
               <span className="font-serif text-sm tracking-[0.2em] uppercase text-cream">
@@ -74,13 +74,14 @@ export function SiteFooter() {
         FOOTER BOTTOM BAR
         -----------------
         Left:  copyright
-        Right: "Made in Rwanda by the Sitecrafters Team" credit
+        Center: "Made in Rwanda by the Sitecrafters Team" credit
+        Right: intentionally empty for floating quick-access buttons
       */}
-      <div className="container-page pt-8 border-t border-cream/10 flex flex-col md:flex-row justify-between items-center gap-4 text-xs text-cream/40">
-        <p className="order-2 md:order-1">
+      <div className="container-page pt-8 border-t border-cream/10 grid md:grid-cols-[1fr_auto_1fr] items-center gap-4 text-xs text-cream/40">
+        <p className="md:justify-self-start">
           &copy; {year} {site.legalName}. All rights reserved.
         </p>
-        <p className="order-1 md:order-2">
+        <p className="text-center">
           Made in Rwanda by the{" "}
           <a
             href={credit.url}

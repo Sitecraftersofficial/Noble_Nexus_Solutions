@@ -38,9 +38,9 @@ export const credit = {
 } as const;
 
 export const contact = {
-  phone: "+250 788 000 000",
-  whatsapp: "+250 788 000 000",
-  email: "rentals@noblenexus.rw",
+  phone: "+250788351955",
+  whatsapp: "+250788351955",
+  email: "nnexusnoblesolutions@gmail.com",
 } as const;
 
 export const social = {

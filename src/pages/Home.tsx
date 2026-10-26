@@ -1,9 +1,8 @@
 /**
  * Home page for the car rental business.
  * Sections: Hero, Trust bar, Featured fleet (from cars.json),
- * Why-rent-with-us (policies), How it works, Testimonials, Contact CTA.
+ * Why-rent-with-us (policies), How it works, Contact CTA.
  */
-import { useMemo, useState } from "react";
 import { Link } from "@/lib/Link";
 import { ShieldCheck, UserRound, CalendarCheck, MapPin, ArrowRight } from "lucide-react";
 import { site, stats, policies } from "@/config/settings";
@@ -193,31 +192,7 @@ export function HomePage() {
         </div>
       </section>
 
-      {/* 6. Testimonials */}
-      <section className="bg-navy text-cream py-24 overflow-hidden">
-        <div className="container-page">
-          <p className="eyebrow text-gold mb-4 text-center">Testimonials</p>
-          <h2 className="font-serif text-4xl md:text-5xl text-center mb-16">In their words.</h2>
-          <div className="grid md:grid-cols-3 gap-10">
-            {TESTIMONIALS.map((t, i) => (
-              <figure
-                key={t.name}
-                className={`nx-reveal nx-delay-${i + 1} border-l-2 border-gold pl-6`}
-              >
-                <blockquote className="font-serif italic text-xl leading-relaxed mb-6">
-                  "{t.quote}"
-                </blockquote>
-                <figcaption>
-                  <p className="text-gold eyebrow text-xs">{t.name}</p>
-                  <p className="text-cream/50 text-xs mt-1">{t.role}</p>
-                </figcaption>
-              </figure>
-            ))}
-          </div>
-        </div>
-      </section>
-
-      {/* 7. Contact CTA */}
+      {/* 6. Contact CTA */}
       <section className="bg-secondary py-24">
         <div className="container-page text-center nx-reveal">
           <h2 className="font-serif text-4xl md:text-6xl text-navy mb-6 text-balance">
@@ -246,24 +221,3 @@ export function HomePage() {
     </>
   );
 }
-
-const TESTIMONIALS = [
-  {
-    name: "Catherine M.",
-    role: "Wedding Planner, Kigali",
-    quote:
-      "A Maybach for the wedding convoy and a Sprinter for the family — one booking, one invoice, everything on time.",
-  },
-  {
-    name: "Marcus L.",
-    role: "NGO Program Director",
-    quote:
-      "Our project rents monthly now. Immaculate cars and roadside support that actually answers on the Muhanga road.",
-  },
-  {
-    name: "Aanya P.",
-    role: "Frequent Flyer",
-    quote:
-      "Reserved at 11pm, keys in hand at Kigali International by 7am. Exactly the standard they promise.",
-  },
-];
